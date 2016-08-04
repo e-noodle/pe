@@ -1,5 +1,5 @@
 #!/bin/bash
-#---
+# ---
 # title:       pe_puppet_init
 #
 # description: pe 2016.2 init script
@@ -47,10 +47,6 @@ function die {
 }
 
 # send to stdout and log
-function pp {
-  echo -e " # $1" | tee -a $SLOG
-}
-
 function pp {
   echo -e " # $1" | tee -a $SLOG
 }
