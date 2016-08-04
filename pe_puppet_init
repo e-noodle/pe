@@ -1,0 +1,111 @@
+#!/bin/bash
+#---
+# title:       pe_puppet_init
+#
+# description: pe 2016.2 init script
+# author:      sensei@enoodle.com.au
+# source:      http://github.com/e-noodle/pe/scripts/puppet_init.sh
+#
+# changelog:   version: 0.0.1, updated_by: sensei, date: 20160804, log: initial script
+
+
+#############
+# vars
+#############
+
+SYSTEMCTL=/usr/sbin/systemctl
+SUPPORTED_OS_RE="redhat|centos"
+PRECHECK=false
+SLOG=/var/log/$(basename $0).log
+
+
+#############
+# functions
+#############
+
+function usage {
+  cat<<EOF
+
+  usage:
+    $0 command -h [option]
+
+  commands:
+    -d, disable         # disable all pe services
+    -x, stop            # stops all pe services
+    -h, help            # displays help | usage
+
+  options:
+    regex [regex]       # apply to services which match regex
+EOF
+  exit 1
+}
+
+function die {
+  pp " => ERROR: $1"
+  pp " => LOG:   ${SLOG}"
+  exit 1
+}
+
+# send to stdout and log
+function pp {
+  echo -e " # $1" | tee -a $SLOG
+}
+
+function pp {
+  echo -e " # $1" | tee -a $SLOG
+}
+
+# sanity checks
+function prechecks {
+  OS_MATCH=$(grep -oiP "${SUPPORTED_OS_RE}" /etc/redhat-release) || die "OS $(cat /etc/redhat-release) not supported"
+  [[ $(id -G) -eq 0 ]] || die "root access required for $(id -G) to run this command"
+  [[ $1 =~ /^start$|^stop$|^status$|^disable$|^enable$/ ]] || die "$1 command not recognised"
+}
+
+
+#############
+# prechecks
+#############
+
+[[ $# -lt 1  ]] && usage
+prechecks $1
+
+
+#############
+# main
+#############
+
+pp "[ START ($(date +"%c")) ]"
+
+case $1 in
+  start)
+    pp "OK: starting pe-puppet services"
+  ;;
+
+  stop)
+    pp "OK: stopping pe-puppet services"
+  ;;
+
+  status)
+    pp "OK: checking status of pe-puppet services"
+  ;;
+
+  disable)
+    pp "OK: disabling pe-puppet services"
+  ;;
+
+  enable)
+    pp "OK: enabling pe-puppet services"
+  ;;
+
+  *)
+   usage
+   exit 1
+  ;;
+esac
+
+pp "[ END   ($(date +"%c")) ]" && exit 0
+
+#############
+# end
+#############
