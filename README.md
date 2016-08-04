@@ -1,10 +1,8 @@
 ## Installing Puppet Enterprise on Redhat/CentOS
-
-1. Download *nix tarball
 ```
 #!/bin/bash
 
-# Download pe and extract to DL_DIR
+# Download pe tarball and extract to DL_DIR
 
 DL_DIR=/opt/pe/install
 TMP_DIR=$(mktemp -d)
